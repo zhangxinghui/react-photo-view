@@ -27,7 +27,6 @@ export default function PhotoProvider({ children, onIndexChange, onVisibleChange
   const [state, updateState] = useSetState(initialState);
   const uniqueIdRef = useRef(0);
   const { images, visible, index } = state;
-
   const methods = useMethods({
     nextId() {
       return (uniqueIdRef.current += 1);

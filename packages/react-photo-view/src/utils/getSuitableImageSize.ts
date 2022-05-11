@@ -5,7 +5,7 @@ import getRotateSize from './getRotateSize';
  * 获取图片合适的大小
  */
 export default function getSuitableImageSize(naturalWidth: number, naturalHeight: number, rotate: number) {
-  const [currentWidth, currentHeight, isVertical] = getRotateSize(rotate, innerWidth, innerHeight);
+  const [currentWidth, currentHeight, isVertical] = getRotateSize(rotate, window.innerWidth, (window.innerHeight - 240));
 
   let y = 0;
   let width = currentWidth;

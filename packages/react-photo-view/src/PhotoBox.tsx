@@ -169,7 +169,6 @@ export default function PhotoBox({
     pause,
     reach,
   } = state;
-
   const fn = useMethods({
     onScale: (current: number) => onScale(limitScale(current)),
     onRotate(current: number) {
@@ -217,8 +216,8 @@ export default function PhotoBox({
         let currentReach: ReachType = undefined;
         if (currentTouchLength === 0) {
           // 边缘超出状态
-          const [horizontalCloseEdge] = computePositionEdge(offsetX + lastX, scale, currentWidth, innerWidth);
-          const [verticalCloseEdge] = computePositionEdge(offsetY + lastY, scale, currentHeight, innerHeight);
+          const [horizontalCloseEdge] = computePositionEdge(offsetX + lastX, scale, currentWidth, window.innerWidth);
+          const [verticalCloseEdge] = computePositionEdge(offsetY + lastY, scale, currentHeight, window.innerHeight);
           // 边缘触发检测
           currentReach = getReachType(initialTouchRef.current, horizontalCloseEdge, verticalCloseEdge, reach);
 
@@ -436,7 +435,6 @@ export default function PhotoBox({
           : undefined,
     },
   };
-
   return (
     <div
       className={`PhotoView__PhotoWrap${wrapClassName ? ` ${wrapClassName}` : ''}`}

@@ -31,7 +31,7 @@ export const minStartTouchOffset = 20;
 /**
  * 默认背景透明度
  */
-export const defaultOpacity = 1;
+export const defaultOpacity = 0.7;
 
 /**
  * 最小缩放度

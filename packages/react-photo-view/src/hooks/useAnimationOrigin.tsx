@@ -85,7 +85,7 @@ function handleUpdateOrigin(
     const { top, left, width, height } = element.getBoundingClientRect();
     const isImage = element.tagName === 'IMG';
     updateOriginRect({
-      T: top,
+      T: top - 60,
       L: left,
       W: width,
       H: height,

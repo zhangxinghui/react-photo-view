@@ -44,8 +44,8 @@ export default function useScrollPosition<C extends (spatial: number) => boolean
   ) => {
     const [currentWidth, currentHeight] = getRotateSize(rotate, width, height);
     // 开始状态下边缘触发状态
-    const [beginEdgeX, beginX] = computePositionEdge(x, safeScale, currentWidth, innerWidth);
-    const [beginEdgeY, beginY] = computePositionEdge(y, safeScale, currentHeight, innerHeight);
+    const [beginEdgeX, beginX] = computePositionEdge(x, safeScale, currentWidth, window.innerWidth);
+    const [beginEdgeY, beginY] = computePositionEdge(y, safeScale, currentHeight, window.innerHeight);
     const moveTime = Date.now() - touchedTime;
 
     // 时间过长、超出安全范围的情况下不执行滚动逻辑，恢复安全范围
@@ -79,8 +79,8 @@ export default function useScrollPosition<C extends (spatial: number) => boolean
       const nextX = x + spatial * (speedX / speedT);
       const nextY = y + spatial * (speedY / speedT);
 
-      const [isEdgeX, currentX] = computePositionEdge(nextX, scale, currentWidth, innerWidth);
-      const [isEdgeY, currentY] = computePositionEdge(nextY, scale, currentHeight, innerHeight);
+      const [isEdgeX, currentX] = computePositionEdge(nextX, scale, currentWidth, window.innerWidth);
+      const [isEdgeY, currentY] = computePositionEdge(nextY, scale, currentHeight, window.innerHeight);
 
       if (isEdgeX && !edgeX) {
         edgeX = true;

@@ -29,9 +29,10 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.5);
     transition-property: background-color;
     z-index: -1;
+    backdrop-filter: blur(30px)
   }
 
   &-Slider__fadeIn {
@@ -49,12 +50,12 @@
     left: 0;
     top: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     width: 100%;
     height: 44px;
     color: white;
-    background-color: rgba(0, 0, 0, 0.5);
+    // background-color: rgba(0, 0, 0, 0.5);
     transition: opacity 0.2s ease-out;
     z-index: 20;
 
@@ -77,12 +78,17 @@
 
   &-Slider__toolbarIcon {
     box-sizing: border-box;
-    padding: 10px;
+    padding: 5px;
     fill: white;
     opacity: 0.75;
     cursor: pointer;
     transition: opacity 0.2s linear;
-
+    border: 1px solid #fff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+    margin-top: 10px;
     &:hover {
       opacity: 1;
     }
@@ -116,6 +122,8 @@
       height: 24px;
       fill: white;
       background: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      transform: translateY(-60%);
     }
   }
 
@@ -125,5 +133,41 @@
 
   &-Slider__ArrowRight {
     right: 0;
+  }
+  &-Slider__Foot {
+    height: 120px;
+    background: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    div{
+      display: inline-block;
+      width: 120px;
+      height: 80px;
+      margin-top: 20px;
+      margin-right: 4px;
+      position: relative;
+    }
+    div::after{
+      content: ' ';
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      cursor: pointer;
+    }
+    .PhotoView-Slider__active::after{
+      content: ' ';
+      display: none;
+    }
+    img{
+      width: 100%;
+      height: 100%;
+    }
   }
 }

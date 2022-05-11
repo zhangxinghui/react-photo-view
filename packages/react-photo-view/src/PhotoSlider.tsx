@@ -147,7 +147,7 @@ export default function PhotoSlider(props: IPhotoSliderProps) {
     if (realVisible) {
       updateState({
         pause: true,
-        x: index * -(innerWidth + horizontalOffset),
+        x: index * -(window.innerWidth + horizontalOffset),
       });
       virtualIndexRef.current = index;
       return;
@@ -177,7 +177,7 @@ export default function PhotoSlider(props: IPhotoSliderProps) {
       const limitIndex = limitNumber(currentIndex, 0, max);
       const nextVirtualIndex = enableLoop ? currentIndex : limitIndex;
       // 单个屏幕宽度
-      const singlePageWidth = innerWidth + horizontalOffset;
+      const singlePageWidth = window.innerWidth + horizontalOffset;
 
       updateState({
         touched: false,
@@ -218,7 +218,7 @@ export default function PhotoSlider(props: IPhotoSliderProps) {
 
   function handleResize() {
     updateState({
-      x: -(innerWidth + horizontalOffset) * index,
+      x: -(window.innerWidth + horizontalOffset) * index,
       lastCX: undefined,
       lastCY: undefined,
       pause: true,
@@ -270,7 +270,7 @@ export default function PhotoSlider(props: IPhotoSliderProps) {
     updateState({
       touched: true,
       lastCX: lastCX,
-      x: -(innerWidth + horizontalOffset) * virtualIndexRef.current + offsetClientX,
+      x: -(window.innerWidth + horizontalOffset) * virtualIndexRef.current + offsetClientX,
       pause: false,
     });
   }
@@ -297,7 +297,7 @@ export default function PhotoSlider(props: IPhotoSliderProps) {
       changeIndex(index - 1);
       return;
     }
-    const singlePageWidth = innerWidth + horizontalOffset;
+    const singlePageWidth = window.innerWidth + horizontalOffset;
     // 当前偏移
     const currentTranslateX = -singlePageWidth * virtualIndexRef.current;
 
@@ -344,91 +344,109 @@ export default function PhotoSlider(props: IPhotoSliderProps) {
   const currentEasing = easingFn ? easingFn(activeAnimation) : defaultEasing;
   const slideSpeed = speedFn ? speedFn(3) : defaultSpeed + 200;
   const slideEasing = easingFn ? easingFn(3) : defaultEasing;
-
   return (
-    <SlidePortal
-      className={`PhotoView-Portal${!currentOverlayVisible ? ' PhotoView-Slider__clean' : ''}${
-        !visible ? ' PhotoView-Slider__willClose' : ''
-      }${className ? ` ${className}` : ''}`}
-      role="dialog"
-      onClick={(e) => e.stopPropagation()}
-    >
-      {visible && <PreventScroll />}
-      <div
-        className={`PhotoView-Slider__Backdrop${maskClassName ? ` ${maskClassName}` : ''}${
-          activeAnimation === 1
-            ? ' PhotoView-Slider__fadeIn'
-            : activeAnimation === 2
-            ? ' PhotoView-Slider__fadeOut'
-            : ''
-        }`}
-        style={{
-          background: `rgba(0, 0, 0, ${currentOpacity})`,
-          transitionTimingFunction: currentEasing,
-          transitionDuration: `${touched ? 0 : currentSpeed}ms`,
-          animationDuration: `${currentSpeed}ms`,
-        }}
-        onAnimationEnd={onAnimationEnd}
-      />
-      {bannerVisible && (
-        <div className="PhotoView-Slider__BannerWrap">
-          <div className="PhotoView-Slider__Counter">
-            {index + 1} / {imageLength}
-          </div>
-          <div className="PhotoView-Slider__BannerRight">
-            {toolbarRender && overlayParams && toolbarRender(overlayParams)}
-            <CloseIcon className="PhotoView-Slider__toolbarIcon" onClick={close} />
-          </div>
-        </div>
-      )}
-      {adjacentImages.map((item: DataType, currentIndex) => {
-        // 截取之前的索引位置
-        const nextIndex =
-          !enableLoop && index === 0 ? index + currentIndex : virtualIndexRef.current - 1 + currentIndex;
-
-        return (
-          <PhotoBox
-            key={enableLoop ? `${item.key}/${item.src}/${nextIndex}` : item.key}
-            item={item}
-            speed={currentSpeed}
-            easing={currentEasing}
-            visible={visible}
-            onReachMove={handleReachMove}
-            onReachUp={handleReachUp}
-            onPhotoTap={() => handlePhotoTap(photoClosable)}
-            onMaskTap={() => handlePhotoTap(maskClosable)}
-            wrapClassName={photoWrapClassName}
-            className={photoClassName}
-            style={{
-              left: `${(innerWidth + horizontalOffset) * nextIndex}px`,
-              transform: `translate3d(${x}px, 0px, 0)`,
-              transition: touched || pause ? undefined : `transform ${slideSpeed}ms ${slideEasing}`,
-            }}
-            loadingElement={loadingElement}
-            brokenElement={brokenElement}
-            onPhotoResize={handleResize}
-            isActive={(currentImage && currentImage.key) === item.key}
-            expose={updateState}
-          />
-        );
-      })}
-      {!isTouchDevice && bannerVisible && (
-        <>
-          {(enableLoop || index !== 0) && (
-            <div className="PhotoView-Slider__ArrowLeft" onClick={() => changeIndex(index - 1, true)}>
-              <ArrowLeft />
+    <div>
+      <SlidePortal
+        className={`PhotoView-Portal${!currentOverlayVisible ? ' PhotoView-Slider__clean' : ''}${
+          !visible ? ' PhotoView-Slider__willClose' : ''
+        }${className ? ` ${className}` : ''}`}
+        role="dialog"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {visible && <PreventScroll />}
+        <div
+          className={`PhotoView-Slider__Backdrop${maskClassName ? ` ${maskClassName}` : ''}${
+            activeAnimation === 1
+              ? ' PhotoView-Slider__fadeIn'
+              : activeAnimation === 2
+              ? ' PhotoView-Slider__fadeOut'
+              : ''
+          }`}
+          style={{
+            background: `rgba(0, 0, 0, ${currentOpacity})`,
+            transitionTimingFunction: currentEasing,
+            transitionDuration: `${touched ? 0 : currentSpeed}ms`,
+            animationDuration: `${currentSpeed}ms`,
+          }}
+          onAnimationEnd={onAnimationEnd}
+        />
+        {bannerVisible && (
+          <div className="PhotoView-Slider__BannerWrap">
+            {/* <div className="PhotoView-Slider__Counter">
+              {index + 1} / {imageLength}
+            </div> */}
+            <div className="PhotoView-Slider__BannerRight">
+              {toolbarRender && overlayParams && toolbarRender(overlayParams)}
+              <CloseIcon className="PhotoView-Slider__toolbarIcon" onClick={close} />
             </div>
-          )}
-          {(enableLoop || index + 1 < imageLength) && (
-            <div className="PhotoView-Slider__ArrowRight" onClick={() => changeIndex(index + 1, true)}>
-              <ArrowRight />
+          </div>
+        )}
+        {adjacentImages.map((item: DataType, currentIndex) => {
+          // 截取之前的索引位置
+          const nextIndex =
+            !enableLoop && index === 0 ? index + currentIndex : virtualIndexRef.current - 1 + currentIndex;
+          
+          return (
+            <PhotoBox
+              key={enableLoop ? `${item.key}/${item.src}/${nextIndex}` : item.key}
+              item={item}
+              speed={currentSpeed}
+              easing={currentEasing}
+              visible={visible}
+              onReachMove={handleReachMove}
+              onReachUp={handleReachUp}
+              onPhotoTap={() => handlePhotoTap(photoClosable)}
+              onMaskTap={() => handlePhotoTap(maskClosable)}
+              wrapClassName={photoWrapClassName}
+              className={photoClassName}
+              style={{
+                left: `${(window.innerWidth + horizontalOffset) * nextIndex}px`,
+                transform: `translate3d(${x}px, 0px, 0)`,
+                transition: touched || pause ? undefined : `transform ${slideSpeed}ms ${slideEasing}`,
+              }}
+              loadingElement={loadingElement}
+              brokenElement={brokenElement}
+              onPhotoResize={handleResize}
+              isActive={(currentImage && currentImage.key) === item.key}
+              expose={updateState}
+            />
+          );
+        })}
+        {!isTouchDevice && bannerVisible && (
+          <>
+            {(enableLoop || index !== 0) && (
+              <div className="PhotoView-Slider__ArrowLeft" onClick={() => changeIndex(index - 1, true)}>
+                <ArrowLeft />
+              </div>
+            )}
+            {(enableLoop || index + 1 < imageLength) && (
+              <div className="PhotoView-Slider__ArrowRight" onClick={() => changeIndex(index + 1, true)}>
+                <ArrowRight />
+              </div>
+            )}
+          </>
+        )}
+        {overlayRender && overlayParams && (
+          <div className="PhotoView-Slider__Overlay">{overlayRender(overlayParams)}</div>
+        )}
+        {
+          currentOverlayVisible && (
+            <div className='PhotoView-Slider__Foot'>
+            {
+              images.map((item: DataType, currentIndex) => {
+                return (
+                  <div className={`${index == currentIndex ? 'PhotoView-Slider__active' : ''}`}  onClick={() => changeIndex(currentIndex, true)}>
+                    <img src={item.src} key={item.key} alt=''/>
+                  </div>
+                )
+              })
+            }
             </div>
-          )}
-        </>
-      )}
-      {overlayRender && overlayParams && (
-        <div className="PhotoView-Slider__Overlay">{overlayRender(overlayParams)}</div>
-      )}
-    </SlidePortal>
+          )
+        }
+       
+      </SlidePortal>
+    </div>
+    
   );
 }
